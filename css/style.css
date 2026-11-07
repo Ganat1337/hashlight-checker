@@ -198,6 +198,10 @@ body {
 }
 
 /* Show/Hide Toggle Button */
+.hidden {
+  display: none;
+}
+
 .toggle-btn {
   position: absolute;
   right: 12px;
