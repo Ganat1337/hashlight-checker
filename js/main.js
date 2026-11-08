@@ -22,59 +22,23 @@ toggleBtn.addEventListener("click", () => {
 });
 
 // Security Checklist
-passwordInput.addEventListener("input", () => {
+const securityChecklist = [
   // #1-At least 8 characters
-  if (passwordInput.value.length >= 8) {
-    length.classList.remove("invalid");
-    length.classList.add("valid");
-  } else {
-    length.classList.remove("valid");
-    length.classList.add("invalid");
-  }
-
+   { element: length, check: (value) => value.length >= 8 },
   // #2-At least one uppercase letter (A-Z)
-  var upperCaseLetters = /[A-Z]/g ;
-  if(passwordInput.value.match(upperCaseLetters)){
-    upperCase.classList.remove("invalid");
-    upperCase.classList.add("valid");
-  }
-  else{
-    upperCase.classList.remove("valid");
-    upperCase.classList.add("invalid");    
-  }
-
+{ element: upperCase, check: (value) => /[A-Z]/.test(value) },
   // #3-At least one lowercase letter (a-z)
-  var lowerCaseLetters = /[a-z]/g ;
-  if(passwordInput.value.match(lowerCaseLetters)){
-    lowerCase.classList.remove("invalid");
-    lowerCase.classList.add("valid");
-  }
-  else{
-    lowerCase.classList.remove("valid");
-    lowerCase.classList.add("invalid");    
-  }
-
+{ element: lowerCase, check: (value) => /[a-z]/.test(value) },
   // #4-At least one number (0-9)
-  var oneNumber = /[0-9]/g ;
-  if(passwordInput.value.match(oneNumber)){
-    numbers.classList.remove("invalid");
-    numbers.classList.add("valid");
-  }
-  else{
-    numbers.classList.remove("valid");
-    numbers.classList.add("invalid");    
-  }
-  
+{ element: numbers, check: (value) => /[0-9]/.test(value) },
   // #5-At least one special symbol (!@#$%^&*)
-  var oneSymbol = /[!@#$%^&*]/ ;
-  if(passwordInput.value.match(oneSymbol)){
-    symbols.classList.remove("invalid");
-    symbols.classList.add("valid");
-  }
-  else{
-    symbols.classList.remove("valid");
-    symbols.classList.add("invalid");    
-  }
+{ element: symbols, check: (value) => /[!@#$%^&*]/.test(value) },
+];
 
+passwordInput.addEventListener("input", () => {
+  const value = passwordInput.value; 
+  securityChecklist.forEach((rule) => { 
+  rule.element.classList.toggle("valid", rule.check(value));    
+});
 
 });
