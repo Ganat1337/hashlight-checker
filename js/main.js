@@ -58,7 +58,7 @@ passwordInput.addEventListener("input", () => {
   let level;
   if (value.length === 0) {
     level = "neutral";
-  } else if (passedRules.length <= 2) {
+  } else if (passedRules.length <= 2 || value.length < 8) {
     level = "weak";
   } else if (passedRules.length === 5 && value.length >= 12) {
     level = "strong";
