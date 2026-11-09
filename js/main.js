@@ -2,7 +2,7 @@ const toggleBtn = document.getElementById("toggle-visibility-btn");
 const eyeOpen = document.getElementById("eye-open");
 const eyeClosed = document.getElementById("eye-closed");
 const passwordInput = document.getElementById("password-input");
-const length = document.getElementById("req-length")
+const length = document.getElementById("req-length");
 const upperCase = document.getElementById("req-uppercase")
 const lowerCase = document.getElementById("req-lowercase")
 const numbers = document.getElementById("req-numbers")
@@ -41,4 +41,27 @@ passwordInput.addEventListener("input", () => {
   rule.element.classList.toggle("valid", rule.check(value));    
 });
 
+// Strength Meter
+  const passedRules = securityChecklist.filter((rule) =>
+    rule.check(passwordInput.value),
+  );
+
+  // console.log(passedRules.length);
+  let level;
+  if (passedRules.length == 0) {
+    level = "neutral";
+  } else if (passedRules.length <= 2) {
+    level = "weak";
+  } else if ((passedRules.length = 5 && value.length >= 12)) {
+    level = "strong";
+  } else {
+    level = "medium";
+  }
+  // console.log(level);
+
+  // remove/add class on meter bar
+  meterBar.classList.remove("weak", "medium", "strong");
+  if (level !== "neutral") {
+    meterBar.classList.add(level);
+  }
 });
