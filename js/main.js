@@ -54,7 +54,7 @@ passwordInput.addEventListener("input", () => {
     level = "neutral";
   } else if (passedRules.length <= 2) {
     level = "weak";
-  } else if ((passedRules.length === 5 && value.length >= 12)) {
+  } else if (passedRules.length === 5 && value.length >= 12) {
     level = "strong";
   } else {
     level = "medium";
@@ -64,5 +64,13 @@ passwordInput.addEventListener("input", () => {
   meterBar.classList.remove("weak", "medium", "strong");
   if (level !== "neutral") {
     meterBar.classList.add(level);
+  }
+  // remove/add class on meter status
+  meterStatus.classList.remove("weak", "medium", "strong");
+  if (level === "neutral") {
+    meterStatus.textContent = "Awaiting Input";
+  } else {
+    meterStatus.textContent = level.charAt(0).toUpperCase() + level.slice(1);
+    meterStatus.classList.add(level);
   }
 });
