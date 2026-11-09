@@ -9,6 +9,12 @@ const numbers = document.getElementById("req-numbers");
 const symbols = document.getElementById("req-symbols");
 const meterStatus = document.getElementById("meter-status");
 const meterBar = document.getElementById("meter-bar");
+const labels = {
+  neutral: "Awaiting Input",
+  weak: "Weak",
+  medium: "Medium",
+  strong: "Strong",
+};
 
 toggleBtn.addEventListener("click", () => {
   eyeOpen.classList.toggle("hidden");
@@ -67,10 +73,8 @@ passwordInput.addEventListener("input", () => {
   }
   // remove/add class on meter status
   meterStatus.classList.remove("weak", "medium", "strong");
-  if (level === "neutral") {
-    meterStatus.textContent = "Awaiting Input";
-  } else {
-    meterStatus.textContent = level.charAt(0).toUpperCase() + level.slice(1);
+  if (level !== "neutral") {
     meterStatus.classList.add(level);
   }
+  meterStatus.textContent = labels[level];
 });
