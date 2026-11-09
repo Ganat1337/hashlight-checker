@@ -54,7 +54,7 @@ passwordInput.addEventListener("input", () => {
     level = "neutral";
   } else if (passedRules.length <= 2) {
     level = "weak";
-  } else if ((passedRules.length = 5 && value.length >= 12)) {
+  } else if ((passedRules.length === 5 && value.length >= 12)) {
     level = "strong";
   } else {
     level = "medium";
