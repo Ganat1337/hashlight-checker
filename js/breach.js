@@ -20,8 +20,7 @@ const dataText = await response.text();
 
 // THIRD STEP
 // #1- turn datatext into array so we can read it
-const lines = dataText.split('\n');
-// console.log(lines);
+const lines = dataText.split('\r\n');
 // split every line into suffix and count 
 for (const line of lines) {
     const [lineSuffix, count] = line.split(':');
