@@ -1,3 +1,4 @@
+import { checkBreach } from "./breach.js";
 const toggleBtn = document.getElementById("toggle-visibility-btn");
 const eyeOpen = document.getElementById("eye-open");
 const eyeClosed = document.getElementById("eye-closed");

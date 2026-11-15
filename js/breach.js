@@ -1,4 +1,4 @@
-async function checkBreach(password){
+export async function checkBreach(password){
     // #FIRST STEP
 // #1- turn string into arrayBuffer(Binary Data)
 const buffer = new TextEncoder().encode(password).buffer;
