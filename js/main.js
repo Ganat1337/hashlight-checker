@@ -10,6 +10,7 @@ const numbers = document.getElementById("req-numbers");
 const symbols = document.getElementById("req-symbols");
 const meterStatus = document.getElementById("meter-status");
 const meterBar = document.getElementById("meter-bar");
+const scan = document.getElementById("breach-check-btn");
 const labels = {
   neutral: "Awaiting Input",
   weak: "Weak",
@@ -78,4 +79,14 @@ passwordInput.addEventListener("input", () => {
     meterStatus.classList.add(level);
   }
   meterStatus.textContent = labels[level];
+});
+
+// breach check btn
+scan.addEventListener("click", async () => {
+  const password = passwordInput.value;
+  if (password.length === 0) {
+    return;
+  }
+  const result = await checkBreach(password);
+  console.log(result);
 });
