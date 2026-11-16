@@ -11,6 +11,7 @@ const symbols = document.getElementById("req-symbols");
 const meterStatus = document.getElementById("meter-status");
 const meterBar = document.getElementById("meter-bar");
 const scan = document.getElementById("breach-check-btn");
+const breachAlert = document.getElementById("breach-alert");
 const labels = {
   neutral: "Awaiting Input",
   weak: "Weak",
@@ -88,5 +89,11 @@ scan.addEventListener("click", async () => {
     return;
   }
   const result = await checkBreach(password);
-  console.log(result);
+  if (result > 0) {
+    breachAlert.textContent = `Found in known breaches ${result.toLocaleString()} times. Change it anywhere you use it.`;
+  } else {
+    breachAlert.textContent =
+      "Not found in known breaches. That doesn't guarantee it's safe.";
+  }
+  breachAlert.classList.remove("hidden");
 });
