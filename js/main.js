@@ -90,11 +90,14 @@ scan.addEventListener("click", async () => {
     return;
   }
   const result = await checkBreach(password);
+
+  breachAlert.classList.remove("safe", "danger", "error");
   if (result > 0) {
+    breachAlert.classList.add("danger");
     breachAlert.textContent = `Found in known breaches ${result.toLocaleString()} times. Change it anywhere you use it.`;
   } else {
-    breachAlert.textContent =
-      "Not found in known breaches. That doesn't guarantee it's safe.";
+    breachAlert.classList.add("safe");
+    breachAlert.textContent = "Not found in known breaches. That doesn't guarantee it's safe.";
   }
   breachAlert.classList.remove("hidden");
 });
