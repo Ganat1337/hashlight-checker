@@ -14,6 +14,7 @@ const scan = document.getElementById("breach-check-btn");
 const breachAlert = document.getElementById("breach-alert");
 const scanLabel = scan.querySelector("span");
 const scanText = scanLabel.textContent;
+let inputVersion = 0;
 const labels = {
   neutral: "Awaiting Input",
   weak: "Weak",
@@ -50,7 +51,7 @@ const securityChecklist = [
 
 passwordInput.addEventListener("input", () => {
   const value = passwordInput.value;
-  breachAlert.classList.add("hidden");
+  breachAlert.classList.add("hidden"); inputVersion++;
   securityChecklist.forEach((rule) => {
     rule.element.classList.toggle("valid", rule.check(value));
   });
@@ -91,26 +92,30 @@ scan.addEventListener("click", async () => {
   if (password.length === 0) {
     return;
   }
+
+  const myVersion = inputVersion;
   scan.disabled = true;
-  scanLabel.textContent = "Checking...";
   breachAlert.classList.remove("safe", "danger", "error");
   try {
     const result = await checkBreach(password);
+    if (myVersion !== inputVersion) {
+      return;
+    }
     if (result > 0) {
       breachAlert.classList.add("danger");
       breachAlert.textContent = `Found in known breaches ${result.toLocaleString()} times. Change it anywhere you use it.`;
     } else {
       breachAlert.classList.add("safe");
-      breachAlert.textContent =
-        "Not found in known breaches. That doesn't guarantee it's safe.";
+      breachAlert.textContent = "Not found in known breaches. That doesn't guarantee it's safe.";
     }
   } catch (error) {
+    if (myVersion !== inputVersion) {
+      return;
+    }
     breachAlert.classList.add("error");
-    breachAlert.textContent =
-      "Couldn't check right now. Please try again. This does not mean the password is safe.";
+    breachAlert.textContent = "Couldn't check right now. Please try again. This does not mean the password is safe.";
   } finally {
     scan.disabled = false;
-    scanLabel.textContent = scanText;
   }
   breachAlert.classList.remove("hidden");
 });
