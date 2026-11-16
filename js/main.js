@@ -12,6 +12,8 @@ const meterStatus = document.getElementById("meter-status");
 const meterBar = document.getElementById("meter-bar");
 const scan = document.getElementById("breach-check-btn");
 const breachAlert = document.getElementById("breach-alert");
+const scanLabel = scan.querySelector("span");
+const scanText = scanLabel.textContent;
 const labels = {
   neutral: "Awaiting Input",
   weak: "Weak",
@@ -89,7 +91,8 @@ scan.addEventListener("click", async () => {
   if (password.length === 0) {
     return;
   }
-
+  scan.disabled = true;
+  scanLabel.textContent = "Checking...";
   breachAlert.classList.remove("safe", "danger", "error");
   try {
     const result = await checkBreach(password);
@@ -98,11 +101,16 @@ scan.addEventListener("click", async () => {
       breachAlert.textContent = `Found in known breaches ${result.toLocaleString()} times. Change it anywhere you use it.`;
     } else {
       breachAlert.classList.add("safe");
-      breachAlert.textContent = "Not found in known breaches. That doesn't guarantee it's safe.";
+      breachAlert.textContent =
+        "Not found in known breaches. That doesn't guarantee it's safe.";
     }
   } catch (error) {
     breachAlert.classList.add("error");
-    breachAlert.textContent = "Couldn't check right now. Please try again. This does not mean the password is safe.";
+    breachAlert.textContent =
+      "Couldn't check right now. Please try again. This does not mean the password is safe.";
+  } finally {
+    scan.disabled = false;
+    scanLabel.textContent = scanText;
   }
   breachAlert.classList.remove("hidden");
 });

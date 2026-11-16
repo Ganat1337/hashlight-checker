@@ -422,6 +422,13 @@ body {
   transform: translateY(0);
 }
 
+.breach-btn:disabled,
+.breach-btn:disabled:hover {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* Breach result message */
 .breach-alert {
   margin-top: 1rem;
