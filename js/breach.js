@@ -15,6 +15,9 @@ const suffix = hashHex.slice(5).toUpperCase();
 // SEC STEP
 // #1- send a request to this addres to check our prefix
 const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
+if (!response.ok) {
+  throw new Error(`HIBP request failed: ${response.status}`);
+}
 // #2- reseve the result
 const dataText = await response.text();
 
@@ -31,7 +34,5 @@ for (const line of lines) {
 return 0;
 
 }
-const breachCount = await checkBreach("qZ8!kLm2$vXr9Tb");
-console.log("Number of leaks:",breachCount);
 
 
