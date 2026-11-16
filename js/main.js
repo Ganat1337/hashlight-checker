@@ -48,6 +48,7 @@ const securityChecklist = [
 
 passwordInput.addEventListener("input", () => {
   const value = passwordInput.value;
+  breachAlert.classList.add("hidden");
   securityChecklist.forEach((rule) => {
     rule.element.classList.toggle("valid", rule.check(value));
   });
