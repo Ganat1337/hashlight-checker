@@ -422,6 +422,40 @@ body {
   transform: translateY(0);
 }
 
+.breach-btn:disabled,
+.breach-btn:disabled:hover {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Breach result message */
+.breach-alert {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.breach-alert.safe {
+  border-color: var(--color-strong);
+  color: var(--text-primary);
+}
+
+.breach-alert.danger {
+  border-color: var(--color-weak);
+  color: var(--text-primary);
+}
+
+.breach-alert.error {
+  border-color: var(--color-medium);
+  color: var(--text-primary);
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 480px) {
   .hashlight-card {
