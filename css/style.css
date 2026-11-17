@@ -421,7 +421,10 @@ body {
 .breach-btn:active {
   transform: translateY(0);
 }
-
+.breach-btn:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
 .breach-btn:disabled,
 .breach-btn:disabled:hover {
   opacity: 0.6;

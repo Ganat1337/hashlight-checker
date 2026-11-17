@@ -114,8 +114,11 @@ scan.addEventListener("click", async () => {
     }
     breachAlert.classList.add("error");
     breachAlert.textContent = "Couldn't check right now. Please try again. This does not mean the password is safe.";
-  } finally {
+  }    finally {
     scan.disabled = false;
+    if (document.activeElement === document.body) {
+      scan.focus();
+    }
   }
   breachAlert.classList.remove("hidden");
 });
