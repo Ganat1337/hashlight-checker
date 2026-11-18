@@ -92,7 +92,7 @@ body[data-strength="strong"],
 /* Main Card Container */
 .hashlight-card {
   width: 100%;
-  max-width: 480px;
+  max-width: 590px;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-top-color: rgba(255, 255, 255, 0.16);
@@ -528,7 +528,7 @@ body[data-strength="strong"],
   background: #0c0c0e;
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 12px;
-  padding: 1rem 1.1rem;
+  padding: 1.15rem 1.25rem;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
@@ -552,9 +552,9 @@ body[data-strength="strong"],
 
 .checklist-item {
   display: flex;
-  align-items: flex-start;
-  gap: 0.55rem;
-  font-size: 0.8125rem;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
   line-height: 1.35;
   color: var(--text-muted);
   transition: color 0.2s ease;
@@ -563,7 +563,6 @@ body[data-strength="strong"],
 .indicator-icon {
   width: 17px;
   height: 17px;
-  margin-top: 1px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.04);
   border: 1.5px solid #52525b;
