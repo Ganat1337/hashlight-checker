@@ -1,32 +1,110 @@
-// Security Checklist
+const COMMON_WORDS = [
+  "password",
+  "passw0rd",
+  "qwerty",
+  "asdfgh",
+  "zxcvbn",
+  "admin",
+  "letmein",
+  "welcome",
+  "iloveyou",
+  "monkey",
+  "dragon",
+  "football",
+  "baseball",
+  "sunshine",
+  "princess",
+  "trustno1",
+];
+
+const KEYBOARD_ROWS = ["qwertyuiop", "asdfghjkl", "zxcvbnm", "01234567890"];
+
+function hasSequentialRun(lowerValue, minLen = 4) {
+  for (const row of KEYBOARD_ROWS) {
+    const rev = row.split("").reverse().join("");
+    for (let i = 0; i <= row.length - minLen; i++) {
+      const seq = row.slice(i, i + minLen);
+      const revSeq = rev.slice(i, i + minLen);
+      if (lowerValue.includes(seq) || lowerValue.includes(revSeq)) {
+        return true;
+      }
+    }
+  }
+
+  const alpha = "abcdefghijklmnopqrstuvwxyz";
+  const alphaRev = alpha.split("").reverse().join("");
+  for (let i = 0; i <= alpha.length - minLen; i++) {
+    const seq = alpha.slice(i, i + minLen);
+    const revSeq = alphaRev.slice(i, i + minLen);
+    if (lowerValue.includes(seq) || lowerValue.includes(revSeq)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+export function hasCommonPattern(value) {
+  if (!value) return false;
+  const lower = value.toLowerCase();
+
+  if (COMMON_WORDS.some((word) => lower.includes(word))) {
+    return true;
+  }
+
+  // 3 or more identical consecutive characters (e.g., "aaa", "111", "!!!")
+  if (/(.)\1{2,}/.test(value)) {
+    return true;
+  }
+
+  if (hasSequentialRun(lower, 4)) {
+    return true;
+  }
+
+  return false;
+}
+
+// Security Checklist (all 6 rules align with Strong rating)
 export const securityChecklist = [
-  // #1-At least 8 characters
-  { id: "length", check: (value) => value.length >= 8 },
-  // #2-At least one uppercase letter (A-Z)
+  { id: "length", check: (value) => value.length >= 12 },
   { id: "upperCase", check: (value) => /[A-Z]/.test(value) },
-  // #3-At least one lowercase letter (a-z)
   { id: "lowerCase", check: (value) => /[a-z]/.test(value) },
-  // #4-At least one number (0-9)
   { id: "numbers", check: (value) => /[0-9]/.test(value) },
-  // #5-At least one special symbol (!@#$%^&*)
-  { id: "symbols", check: (value) => /[!@#$%^&*]/.test(value) },
+  { id: "symbols", check: (value) => /[^A-Za-z0-9\s]/.test(value) },
+  {
+    id: "noCommonPatterns",
+    check: (value) => value.length > 0 && !hasCommonPattern(value),
+  },
 ];
 
 export function checkStrength(value) {
-  // Strength Meter
+  if (value.length === 0) {
+    return "neutral";
+  }
+
+  const hasPattern = hasCommonPattern(value);
   const passedRules = securityChecklist.filter((rule) => rule.check(value));
 
-  // console.log(passedRules.length);
-  let level;
-  if (value.length === 0) {
-    level = "neutral";
-  } else if (passedRules.length <= 2 || value.length < 8) {
-    level = "weak";
-  } else if (passedRules.length === 5 && value.length >= 12) {
-    level = "strong";
-  } else {
-    level = "medium";
+  if (value.length < 8) {
+    return "weak";
   }
-  // console.log(level);
-  return level;
+
+  if (hasPattern) {
+    return value.length < 16 ? "weak" : "medium";
+  }
+
+  // Long passphrases (e.g., 4+ random words >= 20 chars with sufficient character variety)
+  if (value.length >= 20 && new Set(value).size >= 8) {
+    return "strong";
+  }
+
+  if (passedRules.length === securityChecklist.length) {
+    return "strong";
+  }
+
+  if (passedRules.length <= 2) {
+    return "weak";
+  }
+
+  return "medium";
 }
