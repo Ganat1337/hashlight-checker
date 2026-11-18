@@ -6,6 +6,7 @@ import {
 } from "./generator.js";
 import { securityChecklist, checkStrength } from "./strength.js";
 
+const cardContainer = document.querySelector(".hashlight-card");
 const passwordInput = document.getElementById("password-input");
 const clearBtn = document.getElementById("clear-btn");
 const toggleBtn = document.getElementById("toggle-visibility-btn");
@@ -123,6 +124,11 @@ function evaluatePassword(value) {
   if (level !== "neutral") {
     meterBar.classList.add(level);
     meterStatus.classList.add(level);
+    cardContainer.setAttribute("data-strength", level);
+    document.body.setAttribute("data-strength", level);
+  } else {
+    cardContainer.removeAttribute("data-strength");
+    document.body.removeAttribute("data-strength");
   }
 
   meterStatus.textContent = labels[level];
@@ -187,17 +193,20 @@ copyBtn.addEventListener("click", async () => {
 
   try {
     await navigator.clipboard.writeText(value);
-    copyBtn.textContent = "Copied";
+    copyBtn.textContent = "Copied ✓";
+    copyBtn.classList.add("copied");
     if (copyTimeoutId) clearTimeout(copyTimeoutId);
     copyTimeoutId = setTimeout(() => {
       copyBtn.textContent = "Copy";
-    }, 1500);
+      copyBtn.classList.remove("copied");
+    }, 2000);
   } catch {
     copyBtn.textContent = "Failed";
+    copyBtn.classList.remove("copied");
     if (copyTimeoutId) clearTimeout(copyTimeoutId);
     copyTimeoutId = setTimeout(() => {
       copyBtn.textContent = "Copy";
-    }, 1500);
+    }, 2000);
   }
 });
 

@@ -2,6 +2,18 @@
    HASHLIGHT — MONOCHROME PRECISION DESIGN SYSTEM
    ========================================================================== */
 
+@property --ambient-glow {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(255, 255, 255, 0.05);
+}
+
+@property --brand-accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(255, 255, 255, 0.09);
+}
+
 :root {
   --bg-dark: #09090b;
   --card-bg: #111114;
@@ -36,9 +48,9 @@ body {
   background-color: var(--bg-dark);
   background-image:
     radial-gradient(
-      ellipse 80% 50% at 50% 0%,
-      rgba(255, 255, 255, 0.04) 0%,
-      transparent 70%
+      ellipse 80% 45% at 50% -15%,
+      var(--ambient-glow),
+      transparent
     ),
     radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size:
@@ -52,6 +64,25 @@ body {
   color: var(--text-primary);
   padding: 1.5rem;
   -webkit-font-smoothing: antialiased;
+  transition: --ambient-glow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body[data-strength="weak"],
+.hashlight-card[data-strength="weak"] {
+  --ambient-glow: rgba(244, 63, 94, 0.09);
+  --brand-accent: rgba(244, 63, 94, 0.45);
+}
+
+body[data-strength="medium"],
+.hashlight-card[data-strength="medium"] {
+  --ambient-glow: rgba(245, 158, 11, 0.09);
+  --brand-accent: rgba(245, 158, 11, 0.45);
+}
+
+body[data-strength="strong"],
+.hashlight-card[data-strength="strong"] {
+  --ambient-glow: rgba(16, 185, 129, 0.12);
+  --brand-accent: rgba(16, 185, 129, 0.45);
 }
 
 .hidden {
@@ -64,12 +95,37 @@ body {
   max-width: 480px;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
+  border-top-color: rgba(255, 255, 255, 0.16);
   border-radius: 16px;
   padding: 1.75rem;
   box-shadow:
     0 24px 48px -12px rgba(0, 0, 0, 0.7),
     0 1px 0 0 rgba(255, 255, 255, 0.05) inset;
   position: relative;
+  overflow: hidden;
+  transition:
+    --ambient-glow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    --brand-accent 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hashlight-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 45% at 50% -15%,
+    var(--ambient-glow),
+    transparent
+  );
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hashlight-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Header Section */
@@ -91,9 +147,24 @@ body {
   height: 38px;
   border-radius: 10px;
   background: var(--surface-elevated);
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--brand-accent);
   color: var(--text-primary);
   flex-shrink: 0;
+  transition:
+    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hashlight-card[data-strength="weak"] .brand-badge {
+  color: #fb7185;
+}
+
+.hashlight-card[data-strength="medium"] .brand-badge {
+  color: #fbbf24;
+}
+
+.hashlight-card[data-strength="strong"] .brand-badge {
+  color: #34d399;
 }
 
 .card-title {
@@ -349,6 +420,12 @@ body {
   outline-offset: 1px;
 }
 
+.sub-action-btn.copied {
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.35);
+  background: rgba(16, 185, 129, 0.08);
+}
+
 /* Live Strength Meter */
 .meter-container {
   margin-bottom: 1.25rem;
@@ -448,10 +525,11 @@ body {
 /* Requirements Checklist */
 .checklist-container {
   margin-bottom: 1.5rem;
-  background: rgba(9, 9, 11, 0.55);
+  background: #0c0c0e;
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 12px;
   padding: 1rem 1.1rem;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .checklist-title {
@@ -467,16 +545,16 @@ body {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.65rem 1rem;
 }
 
 .checklist-item {
   display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  font-size: 0.84rem;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.8125rem;
   line-height: 1.35;
   color: var(--text-muted);
   transition: color 0.2s ease;
@@ -485,6 +563,7 @@ body {
 .indicator-icon {
   width: 17px;
   height: 17px;
+  margin-top: 1px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.04);
   border: 1.5px solid #52525b;
@@ -531,8 +610,8 @@ body {
 .breach-btn {
   width: 100%;
   height: 46px;
-  background: var(--text-primary);
-  border: 1px solid var(--text-primary);
+  background: linear-gradient(180deg, #ffffff 0%, #e4e4e7 100%);
+  border: 1px solid #e4e4e7;
   border-radius: 10px;
   color: var(--bg-dark);
   font-size: 0.875rem;
@@ -543,19 +622,22 @@ body {
   justify-content: center;
   gap: 0.55rem;
   cursor: pointer;
+  box-shadow: inset 0 1px 0 #ffffff;
   transition:
     background-color 0.15s ease,
     border-color 0.15s ease,
+    box-shadow 0.15s ease,
     opacity 0.15s ease;
 }
 
 .breach-btn:hover:not(:disabled) {
-  background: #e4e4e7;
-  border-color: #e4e4e7;
+  background: linear-gradient(180deg, #f4f4f5 0%, #d4d4d8 100%);
+  border-color: #d4d4d8;
 }
 
 .breach-btn:active:not(:disabled) {
   background: #d4d4d8;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 .breach-btn:focus-visible {
@@ -567,6 +649,7 @@ body {
   background: #18181b;
   color: #52525b;
   border: 1px solid #27272a;
+  box-shadow: none;
   opacity: 1;
   cursor: not-allowed;
 }
@@ -815,6 +898,11 @@ body {
   .sub-action-btn {
     flex: 1;
     text-align: center;
+  }
+
+  .checklist {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
   }
 
   .inspector-split-grid {
