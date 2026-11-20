@@ -1,66 +1,60 @@
 # Hashlight
 
-Client-side password strength evaluator, CSPRNG generator, and breach scanner built with vanilla HTML, CSS, and ES modules.
+Password strength checker and breach scanner that runs in your browser.
 
-Your password never leaves your browser. Only a 5-character hash prefix is sent. Strength checks, hash generation, and breach suffix matching all run locally via the Web Crypto API.
+**[Live demo](https://ganat1337.github.io/hashlight-checker/)**
 
-## What It Does
+![Hashlight screenshot](docs/screenshot.png)
 
-- **Strength Evaluation (`js/strength.js`)**: Evaluates passwords in real time against 6 criteria—12+ characters, uppercase, lowercase, digits, special symbols (`[^A-Za-z0-9\s]`), and common-pattern detection (dictionary words, keyboard walks, ascending/descending sequences, and repeated characters). Long, high-variety passphrases (20+ chars without common patterns) are scored accurately instead of being penalized for missing punctuation.
-- **Breach Scanning (`js/breach.js`)**: Checks passwords against Have I Been Pwned (HIBP) using k-anonymity, caching responses per 5-character hash prefix in memory for the current session.
-- **Generator (`js/generator.js`)**: Uses `crypto.getRandomValues` with rejection sampling (no modulo bias) to generate 16-character random passwords or 7-word passphrases from an in-app list of 160 words. Words are selected uniformly without replacement, providing about 51.1 bits of selection entropy (`log2(160P7)`).
-- **Live k-Anonymity Inspector (`js/main.js`)**: Optional protocol drawer showing the locally computed SHA-1 digest split into the 5-character prefix sent to HIBP and the 35-character suffix kept in the browser.
+Your password never leaves your browser. Only a 5-character hash prefix is sent.
 
-## How k-Anonymity Works
+## Features
 
-```
-password ──(Web Crypto SHA-1)──▶ 40-char hex hash
-                                   ├── first 5 chars (prefix) ──▶ GET api.pwnedpasswords.com/range/{prefix}
-                                   └── remaining 35 chars     ◀── matched locally against returned suffixes
-```
+- **Live strength meter** with three levels (weak, medium, strong), updated on every keystroke.
+- **Requirements checklist** with six rules: 12+ characters, uppercase, lowercase, number, symbol, and no common patterns (dictionary words, keyboard walks, sequences, repeated characters).
+- **Breach scan** using the Have I Been Pwned Pwned Passwords API with k-anonymity (see below).
+- **Password generator** using `crypto.getRandomValues` with rejection sampling (no modulo bias): a 16-character random password, or a passphrase of 7 random words from a 160-word list (about 51 bits of entropy).
+- **Protocol inspector** that shows the local SHA-1 hash split into the part that is sent and the part that stays local.
+- Loading and error states, including offline, and a responsive layout.
 
-1. `hashPasswordSha1()` hashes the input locally using `crypto.subtle.digest("SHA-1", ...)`.
-2. Only the first 5 hex characters (`prefix`) are sent to the HIBP Pwned Passwords Range API.
-3. HIBP returns all known breached hash suffixes sharing that 5-character prefix (~500–1,000 entries).
-4. `checkBreach()` searches the response locally for an exact match against the remaining 35 characters (`suffix`) and reports the breach count.
-5. An `inputVersion` guard in `js/main.js` discards stale in-flight responses if the input changes before the network request settles.
-
-## Project Structure
+## How k-anonymity works
 
 ```
-.
-├── index.html          # Semantic markup, ARIA live regions, inspector & generator panels
-├── css/
-│   └── style.css       # Design tokens, state-driven ambient glow, responsive 2-col checklist
-├── js/
-│   ├── main.js         # UI state, event wiring, race-condition guards, clipboard feedback
-│   ├── strength.js     # Checklist rules, pattern detection, passphrase-aware scoring
-│   ├── breach.js       # Local SHA-1 hashing, session prefix cache, HIBP range client
-│   └── generator.js    # Bias-free CSPRNG generator and 160-word passphrase list
-├── server.js           # Minimal Express static server (port 3000)
-├── package.json        # Scripts (dev, start, build, lint)
-└── LICENSE             # MIT
+password ──(SHA-1 in your browser)──▶ 40-character hash
+                                        ├─ first 5 characters ──▶ sent to api.pwnedpasswords.com/range/{prefix}
+                                        └─ remaining 35 characters ◀── matched locally against the returned list
 ```
 
-## Running Locally
+1. The password is hashed locally with the Web Crypto API.
+2. Only the first 5 hex characters of the hash are sent.
+3. The API returns every known breached hash that shares that prefix (hundreds of entries), so it cannot tell which one is yours.
+4. The remaining 35 characters are compared locally, and the breach count is shown if there is a match.
 
-Requires Node.js 18+ (tested on Node 22).
+## Known limitations
+
+- **"Not found" does not mean "safe".** The scan only checks known breaches.
+- **Strength is a heuristic**, based on rules and patterns. It is not a full entropy estimate.
+- The passphrase wordlist is small (160 words). Longer or random passwords are stronger.
+- Hashing needs a secure context (`https://` or `http://localhost`).
+
+## Run locally
+
+No build step. Open the folder with a static server, for example:
 
 ```bash
-npm install
-npm run dev
+python -m http.server 8000
 ```
 
-The app will be available at `http://localhost:3000`.
+then visit `http://localhost:8000`. (Or use the VS Code Live Server extension.)
 
-You can also verify syntax across all JavaScript modules with:
+## Tech
 
-```bash
-npm run lint
-```
+HTML, CSS, vanilla JavaScript (ES modules), Web Crypto API.
 
-> **Note on Browser Context**: `crypto.subtle` is only exposed in [secure contexts](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts) (`https://` or `http://localhost`). Serving the app over plain `http://` on a LAN IP will disable local SHA-1 hashing in the browser.
+## Credits
+
+Breach data from [Have I Been Pwned](https://haveibeenpwned.com/Passwords) by Troy Hunt.
 
 ## License
 
-[MIT](LICENSE) — Copyright (c) 2026 Ganat Ahmed
+[MIT](LICENSE), copyright (c) 2026 Ganat Ahmed
