@@ -2,7 +2,7 @@
 
 Client-side password strength evaluator, CSPRNG generator, and breach scanner built with vanilla HTML, CSS, and ES modules.
 
-Your password never leaves the browser. Strength checks, hash generation, and breach suffix matching all run locally via the Web Crypto API.
+Your password never leaves your browser. Only a 5-character hash prefix is sent. Strength checks, hash generation, and breach suffix matching all run locally via the Web Crypto API.
 
 ## What It Does
 
