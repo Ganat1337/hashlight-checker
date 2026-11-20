@@ -93,11 +93,6 @@ export function checkStrength(value) {
     return value.length < 16 ? "weak" : "medium";
   }
 
-  // Long passphrases (e.g., 4+ random words >= 20 chars with sufficient character variety)
-  if (value.length >= 20 && new Set(value).size >= 8) {
-    return "strong";
-  }
-
   if (passedRules.length === securityChecklist.length) {
     return "strong";
   }

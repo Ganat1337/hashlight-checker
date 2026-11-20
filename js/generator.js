@@ -83,7 +83,9 @@ export function generatePassphrase(wordCount = 7) {
         chosen.push(word);
       }
     }
-    const candidate = chosen.join("-");
+    const candidate = `${chosen
+      .map((word) => word[0].toUpperCase() + word.slice(1))
+      .join("-")}-${pickChar(DIGITS)}`;
     if (checkStrength(candidate) === "strong") {
       return candidate;
     }
