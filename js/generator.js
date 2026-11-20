@@ -159,8 +159,13 @@ export function upgradePassword(weakPassword) {
   // Append a compact random separator + high-entropy tail until strong and >= 14 chars
   if (upgraded.length < 14 || checkStrength(upgraded) !== "strong") {
     upgraded += pickChar("-_!#");
-    while (upgraded.length < 14 || checkStrength(upgraded) !== "strong") {
+    let attempts = 0;
+    while ((upgraded.length < 14 || checkStrength(upgraded) !== "strong") && attempts < 10) {
       upgraded += pickChar(ALL_CHARS);
+      attempts++;
+    }
+    if (upgraded.length < 14 || checkStrength(upgraded) !== "strong") {
+      return generateRandomPassword(16);
     }
   }
 
