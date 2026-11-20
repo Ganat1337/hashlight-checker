@@ -8,7 +8,7 @@ Your password never leaves the browser. Strength checks, hash generation, and br
 
 - **Strength Evaluation (`js/strength.js`)**: Evaluates passwords in real time against 6 criteria—12+ characters, uppercase, lowercase, digits, special symbols (`[^A-Za-z0-9\s]`), and common-pattern detection (dictionary words, keyboard walks, ascending/descending sequences, and repeated characters). Long, high-variety passphrases (20+ chars without common patterns) are scored accurately instead of being penalized for missing punctuation.
 - **Breach Scanning (`js/breach.js`)**: Checks passwords against Have I Been Pwned (HIBP) using k-anonymity, caching responses per 5-character hash prefix in memory for the current session.
-- **Smart Generator & Upgrader (`js/generator.js`)**: Uses `crypto.getRandomValues` with rejection sampling (no modulo bias) to generate 16-character random passwords or 4-word EFF-style passphrases (`word-word-word-word`), and provides a one-click **Upgrade** action when a weak password is detected.
+- **Generator (`js/generator.js`)**: Uses `crypto.getRandomValues` with rejection sampling (no modulo bias) to generate 16-character random passwords or 7-word passphrases from an in-app list of 160 words. Words are selected uniformly without replacement, providing about 51.1 bits of selection entropy (`log2(160P7)`).
 - **Live k-Anonymity Inspector (`js/main.js`)**: Optional protocol drawer showing the locally computed SHA-1 digest split into the 5-character prefix sent to HIBP and the 35-character suffix kept in the browser.
 
 ## How k-Anonymity Works
@@ -36,7 +36,7 @@ password ──(Web Crypto SHA-1)──▶ 40-char hex hash
 │   ├── main.js         # UI state, event wiring, race-condition guards, clipboard feedback
 │   ├── strength.js     # Checklist rules, pattern detection, passphrase-aware scoring
 │   ├── breach.js       # Local SHA-1 hashing, session prefix cache, HIBP range client
-│   └── generator.js    # Bias-free CSPRNG generator, passphrase wordlist, weak password upgrader
+│   └── generator.js    # Bias-free CSPRNG generator and 160-word passphrase list
 ├── server.js           # Minimal Express static server (port 3000)
 ├── package.json        # Scripts (dev, start, build, lint)
 └── LICENSE             # MIT
