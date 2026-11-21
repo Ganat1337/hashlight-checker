@@ -453,31 +453,6 @@ body[data-strength="strong"],
   gap: 0.5rem;
 }
 
-.upgrade-btn {
-  background: rgba(244, 63, 94, 0.12);
-  border: 1px solid rgba(244, 63, 94, 0.35);
-  color: #fecdd3;
-  font-family: inherit;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 0.2rem 0.55rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.upgrade-btn:hover {
-  background: rgba(244, 63, 94, 0.22);
-  border-color: rgba(244, 63, 94, 0.6);
-}
-
-.upgrade-btn:focus-visible {
-  outline: 2px solid var(--text-primary);
-  outline-offset: 2px;
-}
-
 .meter-status {
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -917,4 +892,8 @@ body[data-strength="strong"],
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
+}
+@media (max-width: 480px) {
+  .generate-pill-btn span { display: none; }  
+  .password-input { padding-right: 6rem; }
 }

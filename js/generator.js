@@ -1,4 +1,4 @@
-import { checkStrength, hasCommonPattern } from "./strength.js";
+import { checkStrength } from "./strength.js";
 
 const UPPER = "ABCDEFGHJKLMNPQRSTUVWXYZ";
 const LOWER = "abcdefghijkmnopqrstuvwxyz";
@@ -74,7 +74,7 @@ export function generateRandomPassword(length = 16) {
   return `${pickChar(UPPER)}${pickChar(LOWER)}${pickChar(DIGITS)}${pickChar(SYMBOLS)}-${PASSPHRASE_WORDS[randomInt(PASSPHRASE_WORDS.length)]}`;
 }
 
-export function generatePassphrase(wordCount = 4) {
+export function generatePassphrase(wordCount = 7) {
   for (let attempt = 0; attempt < 10; attempt++) {
     const chosen = [];
     while (chosen.length < wordCount) {
@@ -83,86 +83,12 @@ export function generatePassphrase(wordCount = 4) {
         chosen.push(word);
       }
     }
-    const candidate = chosen.join("-");
+    const candidate = `${chosen
+      .map((word) => word[0].toUpperCase() + word.slice(1))
+      .join("-")}-${pickChar(DIGITS)}`;
     if (checkStrength(candidate) === "strong") {
       return candidate;
     }
   }
   return generateRandomPassword(18);
-}
-
-function breakCommonPatterns(input) {
-  let result = input.replace(/(.)\1{2,}/g, (match) => match.slice(0, 2));
-
-  // Break obvious dictionary/sequence chunks by substituting internal characters
-  const replacements = [
-    [/password/gi, "p@s$w0rd"],
-    [/passw0rd/gi, "p@s$w0rD"],
-    [/qwerty/gi, "qW3r!y"],
-    [/asdfgh/gi, "a$dF6h"],
-    [/zxcvbn/gi, "zX7v!n"],
-    [/admin/gi, "aDm!n"],
-    [/letmein/gi, "l3tM3!n"],
-    [/welcome/gi, "w3lC0m!"],
-    [/123456/g, "19#48!"],
-    [/1234/g, "19#4"],
-    [/abcd/gi, "aB#d"],
-  ];
-
-  for (const [pattern, replacement] of replacements) {
-    result = result.replace(pattern, replacement);
-  }
-
-  // If any 4-char sequential run or pattern still remains, interleave a random symbol
-  if (hasCommonPattern(result)) {
-    result = result
-      .split("")
-      .map((ch, idx) => (idx % 3 === 2 ? `${ch}${pickChar(SYMBOLS)}` : ch))
-      .join("");
-  }
-
-  return result;
-}
-
-export function upgradePassword(weakPassword) {
-  if (!weakPassword || weakPassword.trim().length === 0) {
-    return generateRandomPassword(16);
-  }
-
-  let upgraded = breakCommonPatterns(weakPassword.trim());
-
-  // Capitalize first alphabetic character if no uppercase exists
-  if (!/[A-Z]/.test(upgraded)) {
-    const firstAlpha = upgraded.search(/[a-z]/);
-    if (firstAlpha !== -1) {
-      upgraded =
-        upgraded.slice(0, firstAlpha) +
-        upgraded[firstAlpha].toUpperCase() +
-        upgraded.slice(firstAlpha + 1);
-    } else {
-      upgraded = `${pickChar(UPPER)}${upgraded}`;
-    }
-  }
-
-  if (!/[a-z]/.test(upgraded)) {
-    upgraded += pickChar(LOWER);
-  }
-
-  if (!/[0-9]/.test(upgraded)) {
-    upgraded += pickChar(DIGITS);
-  }
-
-  if (!/[^A-Za-z0-9\s]/.test(upgraded)) {
-    upgraded += pickChar(SYMBOLS);
-  }
-
-  // Append a compact random separator + high-entropy tail until strong and >= 14 chars
-  if (upgraded.length < 14 || checkStrength(upgraded) !== "strong") {
-    upgraded += pickChar("-_!#");
-    while (upgraded.length < 14 || checkStrength(upgraded) !== "strong") {
-      upgraded += pickChar(ALL_CHARS);
-    }
-  }
-
-  return upgraded;
 }

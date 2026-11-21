@@ -2,7 +2,6 @@ import { checkBreach, hashPasswordSha1 } from "./breach.js";
 import {
   generatePassphrase,
   generateRandomPassword,
-  upgradePassword,
 } from "./generator.js";
 import { securityChecklist, checkStrength } from "./strength.js";
 
@@ -20,7 +19,6 @@ const modePassphraseBtn = document.getElementById("mode-passphrase-btn");
 const regenerateBtn = document.getElementById("regenerate-btn");
 const copyBtn = document.getElementById("copy-btn");
 
-const upgradeBtn = document.getElementById("upgrade-btn");
 const meterStatus = document.getElementById("meter-status");
 const meterBar = document.getElementById("meter-bar");
 
@@ -132,7 +130,6 @@ function evaluatePassword(value) {
   }
 
   meterStatus.textContent = labels[level];
-  upgradeBtn.classList.toggle("hidden", level !== "weak");
 
   updateProtocolInspector(value, currentVersion);
 }
@@ -140,7 +137,7 @@ function evaluatePassword(value) {
 function applyGeneratedPassword() {
   const generated =
     generatorMode === "passphrase"
-      ? generatePassphrase(4)
+      ? generatePassphrase(7)
       : generateRandomPassword(16);
 
   passwordInput.value = generated;
@@ -208,14 +205,6 @@ copyBtn.addEventListener("click", async () => {
       copyBtn.textContent = "Copy";
     }, 2000);
   }
-});
-
-upgradeBtn.addEventListener("click", () => {
-  const upgraded = upgradePassword(passwordInput.value);
-  passwordInput.value = upgraded;
-  setVisibility(true);
-  evaluatePassword(upgraded);
-  passwordInput.focus();
 });
 
 inspectProtocolBtn.addEventListener("click", () => {
