@@ -893,3 +893,7 @@ body[data-strength="strong"],
     animation-duration: 0.01ms !important;
   }
 }
+@media (max-width: 480px) {
+  .generate-pill-btn span { display: none; }  
+  .password-input { padding-right: 6rem; }
+}
