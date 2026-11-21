@@ -13,7 +13,7 @@ Your password never leaves your browser. Only a 5-character hash prefix is sent.
 - **Live strength meter** with three levels (weak, medium, strong), updated on every keystroke.
 - **Requirements checklist** with six rules: 12+ characters, uppercase, lowercase, number, symbol, and no common patterns (dictionary words, keyboard walks, sequences, repeated characters).
 - **Breach scan** using the Have I Been Pwned Pwned Passwords API with k-anonymity (see below).
-- **Password generator** using `crypto.getRandomValues` with rejection sampling (no modulo bias): a 16-character random password, or a passphrase of 7 random words from a 160-word list (about 51 bits of entropy).
+- **Password generator** using `crypto.getRandomValues` with rejection sampling (no modulo bias): a 16-character random password, or a a passphrase of 7 random capitalized words from a 160-word list plus a digit (about 54 bits of entropy).
 - **Protocol inspector** that shows the local SHA-1 hash split into the part that is sent and the part that stays local.
 - Loading and error states, including offline, and a responsive layout.
 
